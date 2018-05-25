@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { map, tap, switchMap } from 'rxjs/operators';
+import { map, tap, switchMap, catchError } from 'rxjs/operators';
 
 import { BackendService } from '../../../backend';
 import { Subject, interval } from 'rxjs';
@@ -7,37 +7,37 @@ import { ActivatedRoute } from '@angular/router';
 
 const transformData = data => {
   return {
-    labels: data.map(point => point.dateTime),
+    labels: data.map(point => point.timestamp),
     datasets: [
       {
         label: 'Humidity',
         data: data.map(point => point.humidity),
         fill: false,
-        borderColor: '#565656',
+        borderColor: '#30263E',
       },
       {
         label: 'Temperature',
-        data: data.map(point => point.temp),
+        data: data.map(point => point.temperature),
         fill: false,
-        borderColor: '#565656',
+        borderColor: '#3F297B',
       },
       {
         label: 'PM10',
         data: data.map(point => point.pm10),
         fill: false,
-        borderColor: '#565656',
+        borderColor: '#7A89A6',
       },
       {
         label: 'PM25',
         data: data.map(point => point.pm25),
         fill: false,
-        borderColor: '#565656',
+        borderColor: '#B77CDA',
       },
       {
         label: 'PM100',
         data: data.map(point => point.pm100),
         fill: false,
-        borderColor: '#565656',
+        borderColor: '#FF895F',
       },
     ],
   };
@@ -61,10 +61,11 @@ export class HomePageComponent implements OnInit {
 
     this.data$.next(transformData(initialData));
 
-    interval(5000).pipe(
+    interval(2000).pipe(
       switchMap(() => this.backend.queryData()
         .pipe(
-          map(transformData)
+          map(transformData),
+          // catchError
         )
       )
     ).subscribe(data => this.data$.next(data));

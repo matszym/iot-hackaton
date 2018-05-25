@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { delay, tap } from 'rxjs/operators';
 
 export interface DataPoint {
-  dateTime: string;
-  temp: number;
+  timestamp: string;
+  temperature: number;
   humidity: number;
   pm10: number;
   pm25: number;
